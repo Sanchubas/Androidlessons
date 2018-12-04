@@ -19,6 +19,7 @@ import android.widget.ToggleButton;
 
 /**изменения которые необходимо внести
  * 1. При нажатии на кнопку Add автоматом очищаются строки ввода
+ * 2. В базе данных нет слов, пока заменить на "нажмите Next"
  */
 
 public class MainActivity extends Activity implements OnClickListener {
