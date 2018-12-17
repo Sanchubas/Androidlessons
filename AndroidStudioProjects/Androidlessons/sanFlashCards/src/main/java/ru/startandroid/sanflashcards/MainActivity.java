@@ -1,9 +1,9 @@
 /**изменения которые необходимо внести
- *
+ *попробуем сделать загрузку базы данных
  *
  */
 
-package ru.startandroid.v007sanflashcards;
+package ru.startandroid.sanflashcards;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -40,7 +39,6 @@ public class MainActivity extends Activity implements OnClickListener {
     Button btnFlip, btnNext,btnFill,btndlt,switchLangBtn;
     TextView txtCard;
     EditText etFront, etBack;
-    CheckBox chLock;
     public boolean switchLang = true;
     public boolean flag;    //флаг со значением true or false, при нажатии на кнопку меняет свое значение на противоположное
     //таким образом на одной кнопке записано два разных кода, которые чередуются
@@ -67,7 +65,6 @@ public class MainActivity extends Activity implements OnClickListener {
         btnFlip.setOnClickListener(this);
 
         switchLangBtn = (Button) findViewById(R.id.switchLangBtn);
-        chLock = (CheckBox) findViewById(R.id.chLock);
 
         btnFill = (Button) findViewById(R.id.btnFill);
         btnFill.setOnClickListener(this);
@@ -92,43 +89,125 @@ public class MainActivity extends Activity implements OnClickListener {
         etBack = (EditText) findViewById(R.id.etBack);
 
         // создаем объект для создания и управления версиями БД
-        dbHelper = new DBHelper(this);
-
-        //дважды нажимаем на чек бокс, чтобы выключить кнопки удаления и заполнения базы
-        //можно было изящнее написать, но так было быстрее
-        chLock.performClick();
-        chLock.performClick();
-
-
-
+        dbHelper = new DBHelper(getApplicationContext());
+        Log.d(LOG_TAG," - - - create_db() (on create) - - - ");
+        dbHelper.create_db();
 //        GetCount();
-
-
-            txtCard.setText("нажмите Next чтобы начать");
+//            txtCard.setText("нажмите Next");
 //            setCardSides();
+
+
 
     }
 
     class DBHelper extends SQLiteOpenHelper {
 
-        public DBHelper(Context context) {
-            // конструктор суперкласса
-            super(context, "myDB", null, 1);
+        private String DB_PATH; // полный путь к базе данных
+        private String DB_NAME = "myDB.db";
+        private static final int SCHEME = 1; // версия базы данных
+        static final String TABLE = "users"; // название таблицы в бд
+        // названия столбцов
+        static final String COLUMN_ID = "_id";
+        static final String COLUMN_NAME = "front";
+        static final String COLUMN_YEAR = "back";
+        private Context myContext;
+
+
+
+        DBHelper(Context context) {
+            super(context, "myDB.db", null, SCHEME);
+            this.myContext=context;
+//            DB_PATH =context.getFilesDir().getPath() + DB_NAME;
+//            DB_PATH="/data/data/"+context.getPackageName()+"/databases" +"/" + DB_NAME;
+
+        }
+
+        void create_db(){
+            Log.d(LOG_TAG," - - - create_db() (in method) - - - ");
+//            InputStream myInput = null;
+//            OutputStream myOutput = null;
+
+            //пробуем начало
+            Log.d(LOG_TAG," - - - пробуем начало - - - ");
+
+//            try {
+                Log.d(LOG_TAG," - - - try - - - ");
+                File file = new File("/data/data/ru.startandroid.sanflashcards/databases/myDB.db");
+
+                    this.getReadableDatabase();
+                    //получаем локальную бд как поток
+//                    myInput = myContext.getAssets().open(DB_NAME);
+                    // Путь к новой бд
+//                    String outFileName = DB_PATH;
+                    // Открываем пустую бд
+//                    myOutput = new FileOutputStream(outFileName);
+
+//                    // побайтово копируем данные
+//                    byte[] buffer = new byte[1024];
+//                    int length;
+//                    while ((length = myInput.read(buffer)) > 0) {
+//                        myOutput.write(buffer, 0, length);
+//                    }
+
+//                    myOutput.flush();
+//                    myOutput.close();
+//                    myInput.close();
+
+//            }
+//            catch(IOException ex){
+//                Log.d(LOG_TAG," - - - catch(IOException ex) - - - ");
+//                Log.d("DatabaseHelper", ex.getMessage());
+//            }
+
+            Log.d(LOG_TAG," - - - пробуем конец - - - ");
+            //пробуем конец
+
+//
+//            try {
+//                Log.d(LOG_TAG," - - - try - - - ");
+//                File file = new File(DB_PATH);
+//                if (!file.exists()) {
+//                    Log.d(LOG_TAG," - - - if (!file.exists()) - - - ");
+//                    this.getReadableDatabase();
+//                    //получаем локальную бд как поток
+//                    myInput = myContext.getAssets().open(DB_NAME);
+//                    // Путь к новой бд
+//                    String outFileName = DB_PATH;
+//                    // Открываем пустую бд
+//                    myOutput = new FileOutputStream(outFileName);
+//
+//                    // побайтово копируем данные
+//                    byte[] buffer = new byte[1024];
+//                    int length;
+//                    while ((length = myInput.read(buffer)) > 0) {
+//                        myOutput.write(buffer, 0, length);
+//                    }
+//
+//                    myOutput.flush();
+//                    myOutput.close();
+//                    myInput.close();
+//                }
+//            }
+//            catch(IOException ex){
+//                Log.d(LOG_TAG," - - - catch(IOException ex) - - - ");
+//                Log.d("DatabaseHelper", ex.getMessage());
+//            }
+//
+
+//        }
+
+//        public SQLiteDatabase open()throws SQLException {
+//
+//            return SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(LOG_TAG, "--- onCreate database ---");
-            //удаляем таблицу
-//            db.execSQL("drop table mytable;");
-//            db.execSQL("DROP TABLE IF EXISTS " + "mytable");
-            // создаем таблицу с полями
-            db.execSQL("create table mytable ("
-                    + "_id integer primary key autoincrement,"
-                    + "front text,"
-                    + "back text" + ");");
-
-
+//            Log.d(LOG_TAG, "--- onCreate database ---");
+//            db.execSQL("create table mytable ("
+//                    + "_id integer primary key autoincrement,"
+//                    + "front text,"
+//                    + "back text" + ");");
         }
 
         @Override
@@ -136,9 +215,10 @@ public class MainActivity extends Activity implements OnClickListener {
             /**Если номер версии базы данных в приложении отличается от версии
              * базы данных на устройстве, то запускается этот метод onUpgrade
               */
-            Log.d(LOG_TAG, "--- onUpgrade database ---");
+//            Log.d(LOG_TAG, "--- onUpgrade database ---");
         }
     }
+
 
     public void onClick(View v) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -182,15 +262,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 {                   //если c.moveToNext() выдает значение, т.е. есть строка, то выполняется код ниже, иначе else
                     pos = c.getPosition(); //заменить значение переменной "pos" на новое, чтобы заработала кнопка "Flip"
                     int idColIndex = c.getColumnIndex("_id"); //получить индекс колонки с названием id
-                    int cardSideBColIndex = c.getColumnIndex(cardSideB); //получить индекс колонки с названием стороны В
+                    int cardSideBColIndex = c.getColumnIndex(cardSideB); //получить индекс колонки с названием front
                     txtCard.setText(c.getString(cardSideBColIndex));
-                    //фитры начало
-//
-//                    int tmpNomber;
-//                    cv.put("tempNomber", tmpNomber);
-//                    db.insert("mytable", null, cv);
-
-                    //филтры конец
                     flag = true; //установить flag в положение true
                     Log.d(LOG_TAG,"if . . .");
                 }else{ //если c.moveToNext() не выдает строку, т.е. последняя строка
@@ -203,7 +276,6 @@ public class MainActivity extends Activity implements OnClickListener {
                     Log.d(LOG_TAG,"else . . .");
                 }
                 break;
-
             case R.id.btnBack:
                 c.moveToPosition(pos); //установить курсор в позицию "pos"
                 if(c.moveToPrevious()) //и перейти на предыдущую строку
@@ -215,7 +287,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 }else{ //если c.moveToPrevious() не выдает строку, т.е. первая строка
                     c.moveToLast();//то переходим опять на первую строку
                     pos = c.getPosition(); //заменить значение переменной "pos" на новое, чтобы заработала кнопка "Flip"
-                    int idColIndex = c.getColumnIndex("id"); //получить индекс колонки с названием id
+                    int idColIndex = c.getColumnIndex("_id"); //получить индекс колонки с названием id
                     int cardSideBColIndex = c.getColumnIndex(cardSideB); //получить индекс колонки с названием front
                     txtCard.setText(c.getString(cardSideBColIndex));//устанавливаем в текст вью полученный текст
                     flag = true; //установить flag в положение true
@@ -298,20 +370,6 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onSwitchLangClick(View view) {
         switchLangToggle();
         setCardSides();
-    }
-
-    public void onChLockClick(View view) {
-        if(chLock.isChecked()){
-            chLock.setText("Locked");
-            btnAdd.setEnabled(false);
-            btnFill.setEnabled(false);
-            btndlt.setEnabled(false);
-        }else{
-            chLock.setText("Unlocked");
-            btnAdd.setEnabled(true);
-            btnFill.setEnabled(true);
-            btndlt.setEnabled(true);
-        }
     }
 
     public void switchLangToggle (){
